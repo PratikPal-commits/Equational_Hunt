@@ -1,8 +1,12 @@
 import sympy as sp
+from sympy.parsing.latex import parse_latex
+
+def parse_equation(equation):
+    return parse_latex(equation, backend="lark")
 
 def analyze_eq(equation):
     x = sp.symbols("x")
-    expression = sp.sympify(equation)
+    expression = parse_equation(equation)
     roots = sp.solve(expression, x)
     derivative = sp.diff(expression, x)
     sec_derivative = sp.diff(expression, x, 2)
@@ -33,6 +37,7 @@ def analyze_eq(equation):
 
 
 
+
     return {
         "equation": str(expression),
         "roots": [str(root) for root in roots],
@@ -44,11 +49,11 @@ def analyze_eq(equation):
 
 
 
-def Graph_Anl(equation):
+def graph_analysis(equation):
 
 
     x = sp.symbols("x")
-    expression = sp.sympify(equation)
+    expression =  parse_equation(equation)
     num = 500
     start = -10
     stop = 10
@@ -74,7 +79,7 @@ def Graph_Anl(equation):
     }
 
 if __name__ == "__main__":
-    result = Graph_Anl("x**2")
+    result = graph_analysis("x**2")
     print(len(result["x"]))
     print(len(result["y"]))
     print(result["x"][0], result["y"][0])

@@ -1,11 +1,14 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from math_main import analyze_eq,Graph_Anl
+from math_main import analyze_eq,graph_analysis
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -21,4 +24,4 @@ def analyze(equation:str):
 
 @app.get("/graph")
 def graph(equation:str):
-    return Graph_Anl(equation)
+    return graph_analysis(equation)
