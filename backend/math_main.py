@@ -33,18 +33,23 @@ def analyze_eq(equation):
         pass
 
 
-
-
-
-
-
     return {
-        "equation": str(expression),
-        "roots": [str(root) for root in roots],
-        "derivative":str(derivative),
-        "Second Derivative":str(sec_derivative),
-        "Y intercept":str(y_intercept),
-        "vertex": str(vertex)
+    "equation": str(expression),
+    "equation_latex": sp.latex(expression),
+
+    "roots": [str(root) for root in roots],
+    "roots_latex": [sp.latex(root) for root in roots],
+
+    "derivative": str(derivative),
+    "derivative_latex": sp.latex(derivative),
+
+    "second_derivative": str(sec_derivative),
+    "second_derivative_latex": sp.latex(sec_derivative),
+
+    "y_intercept": str(y_intercept),
+    "y_intercept_latex": sp.latex(y_intercept),
+
+    "vertex": [sp.latex(value) for value in vertex] if vertex else None
     }
 
 

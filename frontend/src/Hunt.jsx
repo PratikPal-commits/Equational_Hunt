@@ -1,4 +1,4 @@
-import { useState } from "react"; 
+import { useState, useEffect, useRef } from "react";
 import Plot from "react-plotly.js";
 import "mathlive";
 function normalizeEquation(value) {
@@ -23,6 +23,16 @@ function Hunt(){
   const[equation, setEquation] = useState("")
   const[result, setResult] = useState(null)
   const[graphData, setGraphData] = useState(null)
+  const [analyzed, setAnalyzed] = useState(false)
+  const equationResultRef = useRef(null)
+  const derivativeResultRef = useRef(null)
+
+  useEffect(() => {
+    if (result) {
+      equationResultRef.current.value = result.equation_latex
+      derivativeResultRef.current.value = result.derivative_latex
+    }
+  }, [result])
 
   async function analyzeEquations() {
     const response =  await fetch(
@@ -43,6 +53,7 @@ function Hunt(){
   async function handleAnalyze(){
     await analyzeEquations()
     await graphAnalysis()
+    setAnalyzed(true)
   }
 
   return(
@@ -52,32 +63,35 @@ function Hunt(){
       </header>
       <main className="workspace">
 
-  
-  <section className="equation-section">
 
-    <math-field
-      onInput={(event) => {
-        const latex = event.target.getValue("latex")
-        setEquation(normalizeEquation(latex))
-      }}
-      onKeyDown={(event) => {
-        if (event.key === "Enter") {
-          handleAnalyze()
-        }
-      }}
-    ></math-field>
+    
+    <section className="equation-section">
 
-    <button onClick={handleAnalyze}>
-      Analyze an Equation
-    </button>
+      <math-field
+        onInput={(event) => {
+          const latex = event.target.getValue("latex")
+          setEquation(normalizeEquation(latex))
+        }}
+        onKeyDown={(event) => {
+          if (event.key === "Enter") {
+            handleAnalyze()
+          }
+        }}
+      ></math-field>
 
-  </section>
+      {!analyzed && (
+        <button onClick={handleAnalyze}>
+          Analyze an Equation
+        </button>
+      )}
+
+    </section>
 
 
   {graphData && (
     <section className="graph-section">
 
-      <div style={{ width: "100%", maxWidth: "800px" }}>
+      <div className="graph-container">
         <h2>Graph</h2>
 
         <Plot
@@ -109,6 +123,8 @@ function Hunt(){
             responsive: true,
             scrollZoom: true
           }}
+          style={{ width: "100%", height: "500px" }}
+          useResizeHandler={true}
         />
 
       </div>
@@ -124,7 +140,9 @@ function Hunt(){
       <h3>Results</h3>
 
       <p>
-        Equation: {result.equation}
+        Equation: 
+        <math-field ref={equationResultRef}  read-only >          
+        </math-field>
       </p>
 
       <p>
@@ -132,7 +150,9 @@ function Hunt(){
       </p>
 
       <p>
-        Derivative: {result.derivative}
+        Derivative:
+        <math-field ref={derivativeResultRef} read-only>          
+        </math-field>
       </p>
 
     </section>
