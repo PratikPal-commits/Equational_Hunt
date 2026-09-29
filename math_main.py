@@ -34,10 +34,48 @@ def analyze_eq(equation):
 
 
     return {
-        "Equation": str(expression),
-        "Roots": [str(root) for root in roots],
-        "Derivative":str(derivative),
+        "equation": str(expression),
+        "roots": [str(root) for root in roots],
+        "derivative":str(derivative),
         "Second Derivative":str(sec_derivative),
         "Y intercept":str(y_intercept),
-        "Vertex": str(vertex)
+        "vertex": str(vertex)
     }
+
+
+
+def Graph_Anl(equation):
+
+
+    x = sp.symbols("x")
+    expression = sp.sympify(equation)
+    num = 500
+    start = -10
+    stop = 10
+    i = start
+    step = (stop -  start) /(num -1)
+    y_values = []
+    x_values = []
+
+
+    while i<=stop: 
+        x_values.append(i)
+        y = expression.subs(x, i)
+        y = float(y)
+        y_values.append(y)
+        i = i + step
+
+    
+
+    return {
+        "x": x_values,
+        "y": y_values
+
+    }
+
+if __name__ == "__main__":
+    result = Graph_Anl("x**2")
+    print(len(result["x"]))
+    print(len(result["y"]))
+    print(result["x"][0], result["y"][0])
+    print(result["x"][-1], result["y"][-1])
